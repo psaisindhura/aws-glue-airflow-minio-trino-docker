@@ -196,5 +196,5 @@ docker-compose down -v
 
 ## 👩‍💻 Maintainer
 
-Built by [Your Name].  
+Built by Sai Sindhura Pappala.  
 Feel free to fork and contribute.
