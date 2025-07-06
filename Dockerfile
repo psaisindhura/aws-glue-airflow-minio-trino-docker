@@ -11,7 +11,7 @@ ENV MINIO_PORT=9000
 ENV MINIO_ROOT_USER=admin
 ENV MINIO_ROOT_PASSWORD=password
 ENV TRINO_HOME=/opt/trino
-ENV TRINO_VERSION=424
+ENV TRINO_VERSION=435
 ENV PYTHONPATH=/opt/aws-glue-libs:$PYTHONPATH
 ENV SQLITE_VERSION=3500200
 ENV SQLITE_VERSION_HUMAN=3.50.2
@@ -37,12 +37,17 @@ RUN dnf clean all && \
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod +x /usr/local/bin/mc
 
-# Install Trino
+# Install Trino Server
 RUN mkdir -p ${TRINO_HOME} && \
     wget https://repo1.maven.org/maven2/io/trino/trino-server/${TRINO_VERSION}/trino-server-${TRINO_VERSION}.tar.gz -P /tmp && \
     tar -xzf /tmp/trino-server-${TRINO_VERSION}.tar.gz -C ${TRINO_HOME} --strip-components=1 && \
     rm /tmp/trino-server-${TRINO_VERSION}.tar.gz && \
     mkdir -p ${TRINO_HOME}/etc/catalog
+
+# Install Trino CLI
+RUN curl -O https://repo1.maven.org/maven2/io/trino/trino-cli/445/trino-cli-445-executable.jar && \
+    mv trino-cli-445-executable.jar /usr/local/bin/trino && \
+    chmod +x /usr/local/bin/trino
 
 # Configure Trino for MinIO
 COPY trino-config ${TRINO_HOME}/etc/
